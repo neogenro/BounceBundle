@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+        http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Neogen\BouncerBundle\Entity\Bounce" table="bounce">
+        <id name="id" type="integer">
+            <generator strategy="AUTO" />
+        </id>
+        <field name="emailAddress" column="email_address" type="string" />
+        <field name="lastTimeBounce" column="last_time_bounce" type="datetime" />
+        <field name="bounceCount" column="bounce_count" type="integer" />
+        <field name="permanent" column="permanent" type="boolean" />
+    </entity>
+</doctrine-mapping>
