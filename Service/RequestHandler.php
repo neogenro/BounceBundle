@@ -13,10 +13,8 @@ use Aws\Sns\Message;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Http\Client\HttpClient;
 use Http\Message\MessageFactory;
-use Http\Message\MessageFactory\GuzzleMessageFactory;
 use Neogen\BouncerBundle\Entity\Bounce;
 use Neogen\BouncerBundle\Entity\Complaint;
-use Symfony\Component\HttpFoundation\Request;
 
 class RequestHandler
 {
@@ -24,6 +22,7 @@ class RequestHandler
     const MESSAGE_TYPE_UNSUBSCRIBE          = 'UnsubscribeConfirmation';
     const MESSAGE_TYPE_BOUNCE               = 'Bounce';
     const MESSAGE_TYPE_COMPLAINT            = 'Complaint';
+    const MESSAGE_TYPE_NOTIFICATION         = 'Notification';
 
     /** @var \Doctrine\Common\Persistence\ObjectManager|object */
     private $em;
@@ -34,6 +33,10 @@ class RequestHandler
 
     /**
      * RequestHandler constructor.
+     *
+     * @param Registry $registry
+     * @param HttpClient $client
+     * @param MessageFactory $messageFactory
      */
     public function __construct(Registry $registry, HttpClient $client, MessageFactory $messageFactory)
     {
@@ -58,20 +61,26 @@ class RequestHandler
                 $request = $this->messageFactory->createRequest('GET', $message['SubscribeURL']);
                 $this->client->sendRequest($request);
                 break;
-            case self::MESSAGE_TYPE_BOUNCE:
-                $this->handleBounce($message);
-                break;
-            case self::MESSAGE_TYPE_COMPLAINT:
-                $this->handleComplaint($message);
+            case self::MESSAGE_TYPE_NOTIFICATION:
+                $content = json_decode($message['Message'], true);
+
+                switch($content['notificationType']){
+                    case self::MESSAGE_TYPE_BOUNCE:
+                        $this->handleBounce($content);
+                        break;
+                    case self::MESSAGE_TYPE_COMPLAINT:
+                        $this->handleComplaint($content);
+                        break;
+                }
                 break;
         }
     }
 
     /**
-     * @param Message $message
+     * @param array $message
      * @return bool
      */
-    private function handleBounce(Message $message)
+    private function handleBounce(array $message)
     {
         if(isset($message['bounce'])){
             foreach ($message['bounce']['bouncedRecipients'] as $bouncedRecipient) {
@@ -94,10 +103,10 @@ class RequestHandler
     }
 
     /**
-     * @param Message $message
+     * @param array $message
      * @return bool
      */
-    private function handleComplaint(Message $message)
+    private function handleComplaint(array $message)
     {
         if(isset($message['complaint'])){
             foreach ($message['complaint']['complainedRecipients'] as $complainedRecipient) {

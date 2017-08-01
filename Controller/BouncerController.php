@@ -2,10 +2,7 @@
 
 namespace Neogen\BouncerBundle\Controller;
 
-use Neogen\BouncerBundle\Entity\Bounce;
-use Neogen\BouncerBundle\Entity\Complaint;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Aws\Sns\Message;
@@ -20,12 +17,11 @@ class BouncerController extends Controller
      *
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $logger = $this->get('logger');
 
-        $message = Message::fromRawPostData();
-
+        $message = new Message(json_decode($request->getContent(), true));
         $validator = new MessageValidator();
 
         try {
