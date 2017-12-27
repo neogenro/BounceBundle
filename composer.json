@@ -5,6 +5,7 @@
   "keywords": ["aws", "ses", "sns", "bounce", "complaints", "blacklist", "swiftmailer"],
   "homepage": "http://www.neogen.biz",
   "license": "MIT",
+  "version": "2.0",
   "authors": [
     {
       "name": "Bodor Szilard",
@@ -16,8 +17,8 @@
     "aws/aws-sdk-php": "^3.2",
     "aws/aws-php-sns-message-validator": "*",
     "doctrine/orm": "~2.2,>=2.2.3,<2.6",
-    "symfony/symfony": "~2.7|~3.0",
-    "symfony/swiftmailer-bundle": "~2.3",
+    "symfony/framework-bundle": "~2.7|~3.0|^3.4|^4.0",
+    "symfony/swiftmailer-bundle": "^3.1",
     "php-http/client-implementation": "^1.0"
   },
   "require-dev": {
