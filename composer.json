@@ -5,7 +5,6 @@
   "keywords": ["aws", "ses", "sns", "bounce", "complaints", "blacklist", "swiftmailer"],
   "homepage": "http://www.neogen.biz",
   "license": "MIT",
-  "version": "2.0",
   "authors": [
     {
       "name": "Bodor Szilard",
